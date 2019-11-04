@@ -50,6 +50,9 @@ task_context 'Task' do
 	output_port('pose_samples', '/base/samples/RigidBodyState').
             doc "pose of the configured segment."
 
+	output_port('inverted_pose_samples', '/base/samples/RigidBodyState').
+            doc "inverted pose of the configured segment, which might be needed to set the body_reference"
+
 	output_port('unlabeled_markers', '/std/vector</base/Vector3d>')
 end
 

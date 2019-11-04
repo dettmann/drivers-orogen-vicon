@@ -111,6 +111,9 @@ void Task::updateHook()
 
         if (in_frame || !_drop_occluded.get())
 	    _pose_samples.write( rbs );
+
+            rbs.setTransform(rbs.getTransform().inverse());
+            _inverted_pose_samples.write(rbs);
     }
 }
 
