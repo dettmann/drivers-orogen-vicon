@@ -32,10 +32,15 @@ Task::Task(std::string const& name)
 
 bool Task::configureHook()
 {
-    if (!_origin.value().hasValidPosition() || !_origin.value().hasValidOrientation() ) 
+    base::samples::RigidBodyState rbs;
+    rbs = _origin.value();
+    rbs.orientation.normalize();
+    if (!rbs.hasValidPosition() || !rbs.hasValidOrientation() )
         _origin.set(getZeroOrigin());
 
-    if (!_body_reference.value().hasValidPosition() || !_body_reference.value().hasValidOrientation() ) 
+    rbs = _body_reference.value();
+    rbs.orientation.normalize();
+    if (!rbs.hasValidPosition() || !rbs.hasValidOrientation() )
         _body_reference.set(getZeroOrigin());
 
     uncertainty.reset(new vicon::ViconUncertainty<Eigen::Matrix4d>(_uncertainty_samples.value()));
