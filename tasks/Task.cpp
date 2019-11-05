@@ -32,15 +32,11 @@ Task::Task(std::string const& name)
 
 bool Task::configureHook()
 {
-    base::samples::RigidBodyState rbs;
-    rbs = _origin.value();
-    rbs.orientation.normalize();
-    if (!rbs.hasValidPosition() || !rbs.hasValidOrientation() )
+    _origin.value().orientation.normalize();
+    if (!_origin.value().hasValidPosition() || !_origin.value().hasValidOrientation() )
         _origin.set(getZeroOrigin());
-
-    rbs = _body_reference.value();
-    rbs.orientation.normalize();
-    if (!rbs.hasValidPosition() || !rbs.hasValidOrientation() )
+    _body_reference.value().orientation.normalize();
+    if (!_body_reference.value().hasValidPosition() || !_body_reference.value().hasValidOrientation() )
         _body_reference.set(getZeroOrigin());
 
     uncertainty.reset(new vicon::ViconUncertainty<Eigen::Matrix4d>(_uncertainty_samples.value()));
@@ -109,11 +105,15 @@ void Task::updateHook()
         else
             rbs.invalidate();
 
-        if (in_frame || !_drop_occluded.get())
+        if (in_frame || !_drop_occluded.get()) {
 	    _pose_samples.write( rbs );
 
+            //base::Vector3d root2frame(-0.317, 0.0, 0.27);
+            //root2frame = _body_reference.value().orientation.inverse() * root2frame;
             rbs.setTransform(rbs.getTransform().inverse());
+            //rbs.position = root2frame;
             _inverted_pose_samples.write(rbs);
+        }
     }
 }
 
